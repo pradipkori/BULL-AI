@@ -102,8 +102,8 @@ export default function ReportPage() {
       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden print:shadow-none print:border-none print:max-w-none print:m-0 print:p-8">
         
         {/* Report Header */}
-        <div className="bg-slate-900 text-white p-10">
-          <div className="flex justify-between items-start mb-12">
+        <div className="bg-slate-900 text-white p-10 print:p-6">
+          <div className="flex justify-between items-start mb-12 print:mb-6">
             <div>
               <h1 className="text-4xl font-bold tracking-tight mb-2">{report.companyName}</h1>
               <div className="flex items-center gap-4 text-slate-400 text-sm font-medium">
@@ -120,7 +120,7 @@ export default function ReportPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-8 border-t border-slate-700/50 pt-8">
+          <div className="grid grid-cols-2 gap-8 border-t border-slate-700/50 pt-8 print:pt-4">
              <div>
                <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Current Price</div>
                <div className="text-2xl font-light">{data.CURRENT_PRICE || 'N/A'}</div>
@@ -132,7 +132,7 @@ export default function ReportPage() {
           </div>
         </div>
 
-        <div className="p-10 space-y-12">
+        <div className="p-10 print:p-6 space-y-12 print:space-y-6">
           {/* Executive Summary */}
           <section>
             <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2 mb-4 border-b border-slate-100 pb-4">
@@ -190,10 +190,10 @@ export default function ReportPage() {
           </section>
 
           {/* Charts */}
-          <div className="grid grid-cols-2 gap-8 pt-4 page-break-inside-avoid">
+          <div className="grid grid-cols-2 gap-8 pt-4 print:break-inside-avoid">
             <section>
-              <h3 className="text-sm font-bold text-slate-900 mb-6 text-center">Revenue Trend</h3>
-              <div className="h-64 w-full">
+              <h3 className="text-sm font-bold text-slate-900 mb-6 print:mb-2 text-center">Revenue Trend</h3>
+              <div className="h-64 print:h-48 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={chartData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -207,8 +207,8 @@ export default function ReportPage() {
             </section>
 
             <section>
-              <h3 className="text-sm font-bold text-slate-900 mb-6 text-center">Margin Profile</h3>
-              <div className="h-64 w-full">
+              <h3 className="text-sm font-bold text-slate-900 mb-6 print:mb-2 text-center">Margin Profile</h3>
+              <div className="h-64 print:h-48 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={chartData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
