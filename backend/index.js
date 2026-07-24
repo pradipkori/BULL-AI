@@ -34,10 +34,24 @@ if (fs.existsSync(reportsFilePath)) {
 }
 
 app.get('/api/reports', (req, res) => {
-    res.json(reports);
+    // Only return the summary info without full dataPreview for the list
+    const summaryReports = reports.map(r => ({
+        id: r.id,
+        companyName: r.companyName,
+        date: r.date,
+        type: r.type,
+        status: r.status
+    }));
+    res.json(summaryReports);
 });
 
-// Setup multer for file uploads
+app.get('/api/reports/:id', (req, res) => {
+    const report = reports.find(r => r.id === req.params.id);
+    if (!report) {
+        return res.status(404).json({ error: 'Report not found' });
+    }
+    res.json(report);
+});
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads/');
@@ -55,8 +69,6 @@ app.get('/ping', (req, res) => {
 
 const { parseDocument } = require('./services/parser');
 const { extractFinancialData } = require('./services/ai');
-const { generateRevenueChart, generateMarginChart } = require('./services/charts');
-const { generatePDF } = require('./services/pdfGenerator');
 
 app.post('/api/generate-report', upload.single('document'), async (req, res) => {
     try {
@@ -78,35 +90,21 @@ app.post('/api/generate-report', upload.single('document'), async (req, res) => 
         const financialData = await extractFinancialData(rawText, companyName);
         console.log("AI Extraction successful.");
 
-        // Phase 5 - Generate Charts
-        console.log("Generating charts...");
-        const revenueChartPath = await generateRevenueChart(financialData);
-        const marginChartPath = await generateMarginChart(financialData);
-
-        // Phase 5 - Generate PDF
-        console.log("Generating PDF report...");
-        const pdfFileName = await generatePDF(financialData, revenueChartPath, marginChartPath);
-
-        // Optional: Clean up temporary chart files and uploaded docs to save space
-        // fs.unlinkSync(file.path);
-        // fs.unlinkSync(revenueChartPath);
-        // fs.unlinkSync(marginChartPath);
-
-        const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+        const newReportId = Date.now().toString();
         const newReport = {
-            id: Date.now().toString(),
+            id: newReportId,
             companyName: companyName,
             date: new Date().toISOString().split('T')[0],
             type: 'FINANCIAL',
             status: 'success',
-            pdfUrl: `${protocol}://${req.get('host')}/generated/${pdfFileName}`
+            dataPreview: financialData
         };
         reports.unshift(newReport);
         fs.writeFileSync(reportsFilePath, JSON.stringify(reports, null, 2));
 
         return res.json({ 
             message: 'Report generated successfully.', 
-            pdfUrl: newReport.pdfUrl,
+            reportId: newReportId,
             dataPreview: financialData 
         });
 

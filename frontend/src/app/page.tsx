@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { 
   FileText, 
@@ -16,9 +17,10 @@ export default function Dashboard() {
   const [file, setFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState<string>("Standby");
-  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [reportId, setReportId] = useState<string | null>(null);
   const [reports, setReports] = useState<any[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
   const fetchReports = async () => {
     try {
@@ -59,7 +61,7 @@ export default function Dashboard() {
 
     setIsUploading(true);
     setUploadStatus("Uploading Document...");
-    setPdfUrl(null);
+    setReportId(null);
 
     const formData = new FormData();
     formData.append("companyName", companyName);
@@ -76,10 +78,10 @@ export default function Dashboard() {
       console.log(response.data);
       setUploadStatus("Report Generated Successfully");
       
-      if (response.data.pdfUrl) {
-          setPdfUrl(response.data.pdfUrl);
+      if (response.data.reportId) {
+          setReportId(response.data.reportId);
           fetchReports(); // Refresh the reports list
-          window.open(response.data.pdfUrl, '_blank');
+          router.push(`/report/${response.data.reportId}`);
       }
     } catch (error) {
       console.error(error);
@@ -198,7 +200,7 @@ export default function Dashboard() {
                   </tr>
                 ) : (
                   reports.slice(0, 5).map((report) => (
-                    <tr key={report.id} className="hover:bg-slate-50/50 transition-colors cursor-pointer" onClick={() => window.open(report.pdfUrl, '_blank')}>
+                    <tr key={report.id} className="hover:bg-slate-50/50 transition-colors cursor-pointer" onClick={() => router.push(`/report/${report.id}`)}>
                       <td className="px-6 py-4 font-medium flex items-center gap-3">
                         <div className="w-8 h-8 rounded bg-slate-100 flex items-center justify-center font-bold text-slate-600 text-xs">
                           {report.companyName.substring(0, 3).toUpperCase()}
@@ -251,17 +253,15 @@ export default function Dashboard() {
                     <Loader2 className="mb-2 text-amber-500 animate-spin" size={24} />
                     <p className="text-xs font-medium text-center px-4">Parsing Document... <br/> <span className="opacity-70 font-normal">Extracting financial data tables and summary points.</span></p>
                   </>
-              ) : pdfUrl ? (
+              ) : reportId ? (
                   <div className="flex flex-col items-center gap-3">
                     <CheckCircle2 className="text-emerald-500" size={32} />
-                    <a 
-                      href={pdfUrl} 
-                      target="_blank" 
-                      rel="noreferrer"
+                    <button 
+                      onClick={() => router.push(`/report/${reportId}`)}
                       className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition-colors"
                     >
                       View Generated Report
-                    </a>
+                    </button>
                   </div>
               ) : (
                   <>
