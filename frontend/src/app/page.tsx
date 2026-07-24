@@ -22,7 +22,8 @@ export default function Dashboard() {
 
   const fetchReports = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/reports");
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const res = await axios.get(`${apiUrl}/api/reports`);
       setReports(res.data);
     } catch (e) {
       console.error("Failed to fetch reports", e);
@@ -65,7 +66,8 @@ export default function Dashboard() {
     formData.append("document", file);
 
     try {
-      const response = await axios.post("http://localhost:5000/api/generate-report", formData, {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const response = await axios.post(`${apiUrl}/api/generate-report`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
