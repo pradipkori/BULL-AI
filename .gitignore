@@ -1,0 +1,8 @@
+node_modules/
+.env
+.next/
+backend/uploads/
+backend/generated/
+backend/charts/
+*.pdf
+.DS_Store
