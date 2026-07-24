@@ -17,3 +17,18 @@ body {
   color: #0f172a;
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+  
+  html, body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background-color: white !important;
+  }
+}

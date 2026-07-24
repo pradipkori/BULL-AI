@@ -8,7 +8,6 @@ import {
   LineChart, Line 
 } from 'recharts';
 import { Printer, ArrowLeft, Loader2, Building, Calendar, FileText } from 'lucide-react';
-import { usePDF } from 'react-to-pdf';
 
 export default function ReportPage() {
   const { id } = useParams();
@@ -16,7 +15,6 @@ export default function ReportPage() {
   const [report, setReport] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const { toPDF, targetRef } = usePDF({filename: `BULL_AI_Report_${id}.pdf`});
 
   useEffect(() => {
     const fetchReport = async () => {
@@ -92,7 +90,7 @@ export default function ReportPage() {
           Back to Dashboard
         </button>
         <button 
-          onClick={() => toPDF()}
+          onClick={() => window.print()}
           className="flex items-center gap-2 px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-sm font-medium shadow-sm transition-colors"
         >
           <Printer size={16} />
@@ -101,7 +99,7 @@ export default function ReportPage() {
       </div>
 
       {/* A4 Document Container */}
-      <div ref={targetRef} className="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+      <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden print:shadow-none print:border-none print:max-w-none print:m-0 print:p-8">
         
         {/* Report Header */}
         <div className="bg-slate-900 text-white p-10">
