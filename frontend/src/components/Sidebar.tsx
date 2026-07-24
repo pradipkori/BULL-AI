@@ -15,7 +15,7 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0 h-screen sticky top-0">
+    <aside className="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0 h-screen sticky top-0 print:hidden">
       <div className="p-6 flex items-center gap-3">
         <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center">
           <span className="text-white font-bold text-lg">B</span>

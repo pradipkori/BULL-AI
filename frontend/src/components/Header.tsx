@@ -4,7 +4,7 @@ import { Search } from 'lucide-react';
 
 export default function Header() {
   return (
-    <header className="h-16 border-b border-slate-200 bg-white flex items-center px-8 justify-between shrink-0">
+    <header className="h-16 border-b border-slate-200 bg-white flex items-center px-8 justify-between shrink-0 print:hidden">
       <div className="relative w-96">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
         <input 
