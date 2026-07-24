@@ -92,13 +92,14 @@ app.post('/api/generate-report', upload.single('document'), async (req, res) => 
         // fs.unlinkSync(revenueChartPath);
         // fs.unlinkSync(marginChartPath);
 
+        const protocol = req.headers['x-forwarded-proto'] || req.protocol;
         const newReport = {
             id: Date.now().toString(),
             companyName: companyName,
             date: new Date().toISOString().split('T')[0],
             type: 'FINANCIAL',
             status: 'success',
-            pdfUrl: `http://localhost:${PORT}/generated/${pdfFileName}`
+            pdfUrl: `${protocol}://${req.get('host')}/generated/${pdfFileName}`
         };
         reports.unshift(newReport);
         fs.writeFileSync(reportsFilePath, JSON.stringify(reports, null, 2));
